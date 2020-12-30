@@ -14,6 +14,9 @@ inputs:
   lcov-base:
     description: The location of the lcov file for the base branch
     required: false
+  base-directory:
+    description: The base directory
+    required: false
 runs:
   using: node12
   main: dist/main.js

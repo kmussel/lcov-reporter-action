@@ -52,7 +52,10 @@ function toRow(file, indent, options) {
 
 function filename(file, indent, options) {
 	const relative = file.file.replace(options.prefix, "")
-	const href = `https://github.com/${options.repository}/blob/${options.commit}/${relative}`
+	let baseDirectory = options.baseDirectory.replace(/^\//, "").replace(/\\$/, "")
+	if (baseDirectory.length > 0)
+		baseDirectory += "/"
+	const href = `https://github.com/${options.repository}/blob/${options.commit}/${baseDirectory}${relative}`
 	const parts = relative.split("/")
 	const last = parts[parts.length - 1]
 	const space = indent ? "&nbsp; &nbsp;" : ""
