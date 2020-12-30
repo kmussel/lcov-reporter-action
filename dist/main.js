@@ -22841,7 +22841,10 @@ function toRow(file, indent, options) {
 
 function filename(file, indent, options) {
 	const relative = file.file.replace(options.prefix, "");
-	const href = `https://github.com/${options.repository}/blob/${options.commit}/${relative}`;
+	let baseDirectory = options.baseDirectory.replace(/^\//, "").replace(/\\$/, "");
+	if (baseDirectory.length > 0)
+		baseDirectory += "/";
+	const href = `https://github.com/${options.repository}/blob/${options.commit}/${baseDirectory}${relative}`;
 	const parts = relative.split("/");
 	const last = parts[parts.length - 1];
 	const space = indent ? "&nbsp; &nbsp;" : "";
@@ -22957,6 +22960,7 @@ async function main$1() {
 	const token = core$1.getInput("github-token");
 	const lcovFile = core$1.getInput("lcov-file") || "./coverage/lcov.info";
 	const baseFile = core$1.getInput("lcov-base");
+	const baseDirectory = core$1.getInput("base-directory") || "";
 
 	const raw = await fs.promises.readFile(lcovFile, "utf-8").catch(err => null);
 	if (!raw) {
@@ -22972,6 +22976,7 @@ async function main$1() {
 	const options = {
 		repository: github_1.payload.repository.full_name,
 		prefix: `${process.env.GITHUB_WORKSPACE}/`,
+		baseDirectory
 	};
 
 	if (github_1.eventName === "pull_request") {
